@@ -24,7 +24,7 @@ LIB = libft/libft.a
 
 INCDIR = includes
 
-FLAGS = -Wall -Werror -Wextra
+FLAGS = 
 
 .PHONY: all clean fclean re cleanlib fcleanlib relib
 

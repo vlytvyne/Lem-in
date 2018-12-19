@@ -50,8 +50,9 @@ static t_give_status	give_line(char **st_buff, char **line, int is_end_file)
 		return (ERROR);
 	ft_strncpy(*line, *st_buff, size - 1);
 	(*line)[size - 1] = '\0';
+	start = ft_strdup(start);
 	ft_strdel(st_buff);
-	*st_buff = ft_strdup(start);
+	*st_buff = start;
 	return (LINE_IS_GIVEN);
 }
 

@@ -24,6 +24,8 @@ typedef enum		e_sp_meaning
 	END
 }					sp_mean;
 
+typedef struct s_room t_room;
+
 typedef struct		s_neighbors
 {
 	t_room			*room;
