@@ -6,7 +6,7 @@
 /*   By: vlytvyne <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/24 12:51:55 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/11/21 16:44:00 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/20 18:30:48 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,6 @@ void				sort_list_ascii(t_list *root);
 void				sort_list(t_list *root, int (*cmp)(t_list*, t_list*));
 void				reverse_list(t_list **root);
 void				zero_vars(int howmuch, ...);
+void				error(char *msg);
 
 #endif

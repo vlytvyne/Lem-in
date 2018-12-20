@@ -19,18 +19,19 @@
 
 typedef enum		e_sp_meaning
 {
-	NO_SPEC,
+	VISITED,
+	NOT_VIS,
 	START,
 	END
 }					sp_mean;
 
 typedef struct s_room t_room;
 
-typedef struct		s_neighbors
+typedef struct		s_adjacent
 {
 	t_room			*room;
 	t_room			*next;
-}					t_neighbors;
+}					t_adjacent;
 
 typedef	struct		s_room
 {
@@ -39,8 +40,7 @@ typedef	struct		s_room
 	sp_mean			sp_mean;
 	int				distance;
 //	int				ants_wait;
-	t_neighbors		*descendants;
-	struct s_room	*ancestor;
+	t_adjacent		*adjacent;
 }					t_room;
 
 #endif
