@@ -22,32 +22,26 @@ t_list	*read_input(void)
 	i = 0;
 	head = NULL;
 	int ret;
-	// while ((ret = get_next_line(0, &line)) > 0)
-	// {
-	// 	printf("G:%s R:%i\n", line, ret);
-	// 	if (head == NULL)
-	// 		head = ft_lstnew(line, ft_strlen(line) + 1);
-	// 	else
-	// 		lst_add_end(head, ft_lstnew(line, ft_strlen(line) + 1));
-	// }
+	while ((ret = get_next_line(0, &line)) > 0)
+	{
+		if (head == NULL)
+			head = ft_lstnew(line, ft_strlen(line) + 1);
+		else
+			lst_add_end(head, ft_lstnew(line, ft_strlen(line) + 1));
+		free(line);
+	}
 	return (head);
 }
 
 int		main(void)
 {
-	// t_list	*list = read_input();
-	// int		i;
+	t_list	*list = read_input();
 
-	// while (list)
-	// {
-	// 	printf("%s\n", (char*)list->content);
-	// 	list = list->next;
-	// }
-	char	*line;
-	while (get_next_line(0, &line))
+	while (list)
 	{
-//		printf("%s\n", line);
-//		free(line);
+		printf("From list:%s\n", (char*)list->content);
+		free(list->content);
+		list = list->next;
 	}
-//	system("leaks lem-in");
+	//system("leaks lem-in");
 }

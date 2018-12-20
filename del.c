@@ -1,21 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd.c                                        :+:      :+:    :+:   */
+/*   del.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vlytvyne <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/27 19:40:27 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/10/27 19:45:48 by vlytvyne         ###   ########.fr       */
+/*   Created: 2018/12/18 18:56:00 by vlytvyne          #+#    #+#             */
+/*   Updated: 2018/12/18 18:58:43 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 
-void	ft_lstadd(t_list **alst, t_list *new)
-{
-	if (new == NULL || alst == NULL)
-		return ;
-	new->next = *alst;
-	*alst = new;
-}
