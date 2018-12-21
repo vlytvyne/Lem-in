@@ -17,30 +17,33 @@
 #include "printf.h"
 #include "get_next_line.h"
 
+#define LIST_LINE ((char*)((*list)->content))
+
 typedef enum		e_sp_meaning
 {
-	VISITED,
 	NOT_VIS,
+	VISITED,
 	START,
 	END
-}					sp_mean;
+}					e_sp_mean;
 
 typedef struct s_room t_room;
 
-typedef struct		s_adjacent
+typedef struct		s_r_list
 {
 	t_room			*room;
-	t_room			*next;
-}					t_adjacent;
+	struct s_r_list	*next;
+}					t_r_list;
 
 typedef	struct		s_room
 {
 	char			*name;
 	t_coor			coor;
-	sp_mean			sp_mean;
+	e_sp_mean		sp_mean;
 	int				distance;
+	int				ant;
 //	int				ants_wait;
-	t_adjacent		*adjacent;
+	t_r_list		*adjacent;
 }					t_room;
 
 #endif
