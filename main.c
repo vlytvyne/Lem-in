@@ -308,18 +308,12 @@ int		init_graph(t_room *graph)
 	while (rooms)
 	{
 		if (rooms->room->sp_mean != VISITED)
-		{
-		// if (rooms->room->distance != INT_MAX / 2)
-		//  	distance = rooms->room->distance + 1;
-		// else
 			distance = init_graph(rooms->room) + 1;
-		}
 		else
 			distance = rooms->room->distance + 1;
 		graph->distance = distance < graph->distance ? distance : graph->distance;
 		rooms = rooms->next;
 	}
-	//graph->sp_mean = NOT_VIS;
 	printf("NAME: %s DIS: %i\n", graph->name, graph->distance);
 	return (graph->distance);
 }
@@ -340,17 +334,23 @@ int		main(void)
 	rooms = create_rooms(&list);
 	link_rooms(&list, rooms);
 	graph = get_graph_start(rooms);
-	// while (list)
-	// {
-	// 	printf("%s\n", (char*)list->content);
-	// 	list = list->next;
-	// }
 	printf("THE MOST SHORT PATH: %i\n", init_graph(graph));
 	while (rooms)
 	{
 		printf("ROOM: %s DISTANCE: %i\n", rooms->room->name, rooms->room->distance);
 		rooms = rooms->next;
 	}
+	// while (rooms)
+	// {
+	// 	printf("ROOM: %s SP_MEAN: %i LINKS: ", rooms->room->name, rooms->room->sp_mean);
+	// 	while (rooms->room->adjacent)
+	// 	{
+	// 		printf("|%s|", rooms->room->adjacent->room->name);
+	// 		rooms->room->adjacent = rooms->room->adjacent->next;
+	// 	}
+	// 	printf("\n");
+	// 	rooms = rooms->next;
+	// }
 //	ft_lstdel(&list_start, del_list);
 //	system("leaks lem-in");
 }
