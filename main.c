@@ -82,6 +82,7 @@ t_r_list	*create_r_list(t_room *room)
 	return (list);
 }
 
+//проверять начинаеться ли комната с 'L'
 t_room		*init_room(char	**lines, e_sp_mean sp_mean)
 {
 	t_room	*room;
@@ -89,8 +90,10 @@ t_room		*init_room(char	**lines, e_sp_mean sp_mean)
 
 	room = (t_room*)malloc(sizeof(t_room));
 	room->name = lines[0];
+	room->distance = INT_MAX / 2;
 	room->sp_mean = sp_mean;
-	room->distance = INT_MAX;
+	if (sp_mean == END)
+		room->distance = 0;
 	room->adjacent = NULL;
 	room->ant = 0;
 	i = 0;
@@ -306,11 +309,17 @@ int		init_graph(t_room *graph)
 	{
 		if (rooms->room->sp_mean != VISITED)
 		{
+		// if (rooms->room->distance != INT_MAX / 2)
+		//  	distance = rooms->room->distance + 1;
+		// else
 			distance = init_graph(rooms->room) + 1;
-			graph->distance = distance < graph->distance ? distance : graph->distance;
 		}
+		else
+			distance = rooms->room->distance + 1;
+		graph->distance = distance < graph->distance ? distance : graph->distance;
 		rooms = rooms->next;
 	}
+	//graph->sp_mean = NOT_VIS;
 	printf("NAME: %s DIS: %i\n", graph->name, graph->distance);
 	return (graph->distance);
 }
@@ -336,18 +345,12 @@ int		main(void)
 	// 	printf("%s\n", (char*)list->content);
 	// 	list = list->next;
 	// }
-	// while (rooms)
-	// {
-	// 	printf("ROOM: %s SP_MEAN: %i LINKS: ", rooms->room->name, rooms->room->sp_mean);
-	// 	while (rooms->room->adjacent)
-	// 	{
-	// 		printf("|%s|", rooms->room->adjacent->room->name);
-	// 		rooms->room->adjacent = rooms->room->adjacent->next;
-	// 	}
-	// 	printf("\n");
-	// 	rooms = rooms->next;
-	// }
-	printf("%i\n", init_graph(graph));
+	printf("THE MOST SHORT PATH: %i\n", init_graph(graph));
+	while (rooms)
+	{
+		printf("ROOM: %s DISTANCE: %i\n", rooms->room->name, rooms->room->distance);
+		rooms = rooms->next;
+	}
 //	ft_lstdel(&list_start, del_list);
 //	system("leaks lem-in");
 }
