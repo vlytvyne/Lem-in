@@ -59,16 +59,16 @@ void	add_room(t_r_list *head, t_r_list *new)
 	{
 		if (head->room->coor.x == new->room->coor.x &&
 			head->room->coor.y == new->room->coor.y)
-			error("Different rooms have same coordinates.");
+			error_exit("Different rooms have same coordinates.");
 		if (ft_strequ(head->room->name, new->room->name))
-			error("Different rooms have same names.");
+			error_exit("Different rooms have same names.");
 		head = head->next;
 	}
 	if (head->room->coor.x == new->room->coor.x &&
 		head->room->coor.y == new->room->coor.y)
-		error("Different rooms have same coordinates.");
+		error_exit("Different rooms have same coordinates.");
 	if (ft_strequ(head->room->name, new->room->name))
-		error("Different rooms have same names.");
+		error_exit("Different rooms have same names.");
 	head->next = new;
 }
 
@@ -101,13 +101,13 @@ t_room		*init_room(char	**lines, e_sp_mean sp_mean)
 		i++;
 	while (lines[1][i])
 		if (!ft_isdigit(lines[1][i++]))
-			error("Please, enter rooms in the acceptable format.");
+			error_exit("Please, enter rooms in the acceptable format.");
 	i = 0;
 	if (lines[2][0] == '-')
 		i++;
 	while (lines[2][i])
 		if (!ft_isdigit(lines[2][i++]))
-			error("Please, enter rooms in the acceptable format.");
+			error_exit("Please, enter rooms in the acceptable format.");
 	room->coor.x = ft_atoi(lines[1]);
 	room->coor.y = ft_atoi(lines[2]);
 	return (room);
@@ -135,18 +135,18 @@ e_sp_mean	process_commands(t_list **list)
 		if (ft_strequ("##start", LIST_LINE))
 		{
 			if (sp_m == END)
-				error("Two commands in the row.");
+				error_exit("Two commands in the row.");
 			if (start_found)
-				error("Two START command in the file.");
+				error_exit("Two START command in the file.");
 			sp_m = START;
 			start_found++;
 		}
 		if (ft_strequ("##end", LIST_LINE))
 		{
 			if (sp_m == START)
-				error("Two commands in the row.");
+				error_exit("Two commands in the row.");
 			if (end_found)
-				error("Two END command in the file.");
+				error_exit("Two END command in the file.");
 			sp_m = END;
 			end_found++;
 		}
@@ -195,9 +195,9 @@ int		extract_ants(t_list **list)
 	while (*list && LIST_LINE[0] == '#')
 	{
 		if (ft_strequ("##start", LIST_LINE))
-			error("Start command doesn't work with ants.");
+			error_exit("Start command doesn't work with ants.");
 		if (ft_strequ("##end", LIST_LINE))
-			error("End command doesn't work with ants.");
+			error_exit("End command doesn't work with ants.");
 		*list = (*list)->next;
 	}
 	if (*list)
@@ -205,12 +205,12 @@ int		extract_ants(t_list **list)
 		while (LIST_LINE[i])
 		{
 			if (!ft_isdigit(LIST_LINE[i]))
-				error("Please, enter ants in the acceptable format.");
+				error_exit("Please, enter ants in the acceptable format.");
 			i++;
 		}
 		ants = ft_atoi(LIST_LINE);
 		if (ants == 0)
-			error("Please, enter ants in the acceptable format.");
+			error_exit("Please, enter ants in the acceptable format.");
 		else
 			*list = (*list)->next;
 	}
@@ -233,7 +233,7 @@ void	set_link(char **links, t_r_list *rooms)
 		rooms = rooms->next;
 	}
 	if (room1 == NULL || room2 == NULL)
-		error("Linking nonexistent room.");
+		error_exit("Linking nonexistent room.");
 	
 	if (room1->adjacent == NULL)
 		room1->adjacent = create_r_list(room2);
@@ -255,9 +255,9 @@ void	link_rooms(t_list **list, t_r_list *rooms)
 		while (*list && LIST_LINE[0] == '#')
 		{
 			if (ft_strequ("##start", LIST_LINE))
-				error("Start command doesn't work with links.");
+				error_exit("Start command doesn't work with links.");
 			if (ft_strequ("##end", LIST_LINE))
-				error("End command doesn't work with links.");
+				error_exit("End command doesn't work with links.");
 			*list = (*list)->next;
 		}
 		if (*list)
@@ -287,9 +287,9 @@ t_room	*get_graph_start(t_r_list *rooms)
 		rooms = rooms->next;
 	}
 	if (start == NULL)
-		error("No start.");
+		error_exit("No start.");
 	if (end == NULL)
-		error("No end.");
+		error_exit("No end.");
 	return (start);
 }
 
@@ -300,7 +300,6 @@ int		init_graph(t_room *graph)
 
 	if (graph->sp_mean == END)
 	{
-		printf("END\n");
 		return (0);
 	}
 	rooms = graph->adjacent;
@@ -314,7 +313,7 @@ int		init_graph(t_room *graph)
 		graph->distance = distance < graph->distance ? distance : graph->distance;
 		rooms = rooms->next;
 	}
-	printf("NAME: %s DIS: %i\n", graph->name, graph->distance);
+	graph->sp_mean = NOT_VIS;
 	return (graph->distance);
 }
 
@@ -328,7 +327,7 @@ int		main(void)
 
 	list = read_input();
 	if (list == NULL)
-		error("Listen... You gotta input something...");
+		error_exit("Listen... You gotta input something...");
 	list_start = list;
 	ants = extract_ants(&list);
 	rooms = create_rooms(&list);
@@ -342,7 +341,7 @@ int		main(void)
 	}
 	// while (rooms)
 	// {
-	// 	printf("ROOM: %s SP_MEAN: %i LINKS: ", rooms->room->name, rooms->room->sp_mean);
+	// 	printf("ROOM: %s LINKS: ", rooms->room->name);
 	// 	while (rooms->room->adjacent)
 	// 	{
 	// 		printf("|%s|", rooms->room->adjacent->room->name);
