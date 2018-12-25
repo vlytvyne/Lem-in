@@ -18,11 +18,12 @@
 #include "get_next_line.h"
 
 #define LIST_LINE ((char*)((*list)->content))
+#define USED INT_MAX
+#define NEXT ancestor
 
 typedef enum		e_sp_meaning
 {
-	NOT_VIS,
-	VISITED,
+	NO_SP_MEAN,
 	START,
 	END
 }					e_sp_mean;
@@ -39,11 +40,12 @@ typedef	struct		s_room
 {
 	char			*name;
 	t_coor			coor;
+	t_room			*ancestor;
 	e_sp_mean		sp_mean;
 	int				distance;
 	int				ant;
-//	int				ants_wait;
 	t_r_list		*adjacent;
+	int				visit_id;
 }					t_room;
 
 #endif

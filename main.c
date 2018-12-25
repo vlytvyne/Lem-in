@@ -13,6 +13,7 @@
 #include "lemin.h"
 # include <stdio.h>
 
+
 t_list	*read_input(void)
 {
 	t_list	*head;
@@ -96,6 +97,8 @@ t_room		*init_room(char	**lines, e_sp_mean sp_mean)
 		room->distance = 0;
 	room->adjacent = NULL;
 	room->ant = 0;
+	room->visit_id = 0;
+	room->ancestor = NULL;
 	i = 0;
 	if (lines[1][0] == '-')
 		i++;
@@ -129,7 +132,7 @@ e_sp_mean	process_commands(t_list **list)
 	static int	start_found = 0;
 	static int	end_found = 0;
 
-	sp_m = NOT_VIS;
+	sp_m = NO_SP_MEAN;
 	while (*list && LIST_LINE[0] == '#')
 	{
 		if (ft_strequ("##start", LIST_LINE))
@@ -180,15 +183,9 @@ t_r_list	*create_rooms(t_list **list)
 	return (rooms);
 }
 
-void	del_list(void *content, size_t size)
-{
-	free(content);
-}
-
 int		extract_ants(t_list **list)
 {
 	int		ants;
-	t_list	*to_free;
 	int		i;
 
 	i = 0;
@@ -234,12 +231,10 @@ void	set_link(char **links, t_r_list *rooms)
 	}
 	if (room1 == NULL || room2 == NULL)
 		error_exit("Linking nonexistent room.");
-	
 	if (room1->adjacent == NULL)
 		room1->adjacent = create_r_list(room2);
 	else
 		add_room_nocheck(room1->adjacent, create_r_list(room2));
-
 	if (room2->adjacent == NULL)
 		room2->adjacent = create_r_list(room1);
 	else
@@ -271,7 +266,7 @@ void	link_rooms(t_list **list, t_r_list *rooms)
 	}
 }
 
-t_room	*get_graph_start(t_r_list *rooms)
+t_room	*get_graph_end(t_r_list *rooms)
 {
 	t_room	*start;
 	t_room	*end;
@@ -290,31 +285,163 @@ t_room	*get_graph_start(t_r_list *rooms)
 		error_exit("No start.");
 	if (end == NULL)
 		error_exit("No end.");
-	return (start);
+	return (end);
 }
 
-int		init_graph(t_room *graph)
+void	enq(t_r_list **rear, t_r_list **front, t_room *room)
 {
-	t_r_list	*rooms;
-	int			distance;
+	t_r_list	*curr;
 
-	if (graph->sp_mean == END)
-	{
+	curr = create_r_list(room);
+	if (*rear != NULL)
+		(*rear)->next = curr;
+	*rear = curr;
+	if (*front == NULL)
+		*front = curr;
+}
+
+t_room	*deq(t_r_list **front)
+{
+	t_r_list	*to_free;
+	t_room		*room;
+
+	if (*front == NULL)
+		return (NULL);
+	to_free = *front;
+	room = (*front)->room;
+	*front = (*front)->next;
+	//free(to_free);
+	return (room);
+}
+
+int		mark_path(t_room *room)
+{
+	room->visit_id = USED;
+	if (room->sp_mean == END)
 		return (0);
-	}
-	rooms = graph->adjacent;
-	graph->sp_mean = VISITED;
-	while (rooms)
+	if (room->ancestor)
 	{
-		if (rooms->room->sp_mean != VISITED)
-			distance = init_graph(rooms->room) + 1;
-		else
-			distance = rooms->room->distance + 1;
-		graph->distance = distance < graph->distance ? distance : graph->distance;
-		rooms = rooms->next;
+		room->distance = mark_path(room->ancestor) + 1;
 	}
-	graph->sp_mean = NOT_VIS;
-	return (graph->distance);
+	return (room->distance);
+}
+
+t_room	*bfs(t_room *end, int visit_id)
+{
+	t_r_list	*front;
+	t_r_list	*rear;
+	t_room		*room;
+	t_r_list	*adjacent;
+	int			distacnce;
+
+	distacnce = 0;
+	front = NULL;
+	rear = NULL;
+	enq(&rear, &front, end);
+	while (front != NULL)
+	{
+		room = deq(&front);
+		room->visit_id = visit_id;
+		if (room->sp_mean == START)
+		{
+			room->ancestor->distance = distacnce;
+			mark_path(room->ancestor);
+			return (room->ancestor);
+		}
+		adjacent = room->adjacent;
+		while (adjacent)
+		{
+			if (adjacent->room->visit_id != visit_id && adjacent->room->visit_id != USED)
+			{
+				adjacent->room->ancestor = room;
+				adjacent->room->visit_id = visit_id;
+				enq(&rear, &front, adjacent->room);
+			}
+			adjacent = adjacent->next;
+		}
+	}
+	return (NULL);
+}
+
+t_r_list	*get_paths(t_room *end)
+{
+	int			i;
+	t_room		*path;
+	t_r_list	*paths;
+	
+	i = 1;
+	paths = NULL;
+	while ((path = bfs(end, i)))
+	{
+		if (paths == NULL)
+			paths = create_r_list(path);
+		else
+			add_room_nocheck(paths, create_r_list(path));
+		i++;
+	}
+	return (paths);
+}
+
+int		push_ants(t_room *room)
+{
+	int		pushed;
+
+	pushed = 0;
+	while (room->NEXT)
+	{
+		if (room->ant != 0)
+		{
+			pushed = 1;
+			if (room->NEXT->ant != 0)
+				push_ants(room->NEXT);
+			room->NEXT->ant = room->ant;
+			room->ant = 0;
+			return (1);
+		}
+		room = room->NEXT;
+	}
+	return (pushed);
+}
+
+void	print_path(t_room *room)
+{
+	int		ft;
+
+	ft = 1;
+	while (room)
+	{
+		if (room->ant != 0)
+		{
+			if (ft)
+			{
+				printf("L%i-%s", room->ant, room->name);
+				ft = 0;
+			}
+			else
+				printf(" L%i-%s", room->ant, room->name);
+		}
+		room = room->NEXT;
+	}
+	printf("\n");
+}
+
+void	launch_ants(int ants, t_r_list *paths)
+{
+	int 	ant_name;
+	t_room	*path;
+
+	ant_name = 1;
+	path = paths->room;
+	while (ant_name <= ants)
+	{
+		
+		push_ants(path);
+		path->ant = ant_name;
+		ant_name++;
+		print_path(path);
+	}
+	while (push_ants(path))
+		print_path(path);
 }
 
 int		main(void)
@@ -323,7 +450,8 @@ int		main(void)
 	t_list		*list_start;
 	int			ants;
 	t_r_list	*rooms;
-	t_room		*graph;
+	t_room		*end;
+	t_r_list	*paths;
 
 	list = read_input();
 	if (list == NULL)
@@ -332,13 +460,9 @@ int		main(void)
 	ants = extract_ants(&list);
 	rooms = create_rooms(&list);
 	link_rooms(&list, rooms);
-	graph = get_graph_start(rooms);
-	printf("THE MOST SHORT PATH: %i\n", init_graph(graph));
-	while (rooms)
-	{
-		printf("ROOM: %s DISTANCE: %i\n", rooms->room->name, rooms->room->distance);
-		rooms = rooms->next;
-	}
+	end = get_graph_end(rooms);
+	paths = get_paths(end);
+	launch_ants(ants, paths);
 	// while (rooms)
 	// {
 	// 	printf("ROOM: %s LINKS: ", rooms->room->name);
