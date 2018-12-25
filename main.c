@@ -332,9 +332,7 @@ t_room	*bfs(t_room *end, int visit_id)
 	t_r_list	*rear;
 	t_room		*room;
 	t_r_list	*adjacent;
-	int			distacnce;
 
-	distacnce = 0;
 	front = NULL;
 	rear = NULL;
 	enq(&rear, &front, end);
@@ -344,7 +342,6 @@ t_room	*bfs(t_room *end, int visit_id)
 		room->visit_id = visit_id;
 		if (room->sp_mean == START)
 		{
-			room->ancestor->distance = distacnce;
 			mark_path(room->ancestor);
 			return (room->ancestor);
 		}
@@ -377,6 +374,8 @@ t_r_list	*get_paths(t_room *end)
 			paths = create_r_list(path);
 		else
 			add_room_nocheck(paths, create_r_list(path));
+		if (path->sp_mean == END)
+			break ;
 		i++;
 	}
 	return (paths);
