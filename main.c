@@ -320,7 +320,7 @@ int		mark_path(t_room *room)
 	room->id = room->visit_id;
 	room->visit_id = USED;
 	if (room->sp_mean == END)
-		return (0);
+		return (1);
 	if (room->ancestor)
 	{
 		room->distance = mark_path(room->ancestor) + 1;
@@ -410,6 +410,8 @@ void	print_path(t_room *room)
 	{
 		if (room->ant != 0)
 			printf("L%i-%s ", room->ant, room->name);
+		if (room->sp_mean == END)
+			room->ant = 0;
 		room = room->NEXT;
 	}
 }
@@ -430,12 +432,14 @@ int		should_use_path(int *dist, t_room *path, int ants)
 
 	i = 1;
 	sum = 0;
+//	printf("ANTS: %i\n", ants);
 	while (i < path->id)
 	{
 		sum += path->distance - dist[i];
-	//printf("SUM: %i PATH: %i DI: %i\n", sum, path->distance, dist[i]);
+//		printf("SUM: %i PATH: %i DI: %i\n", sum, path->distance, dist[i]);
 		i++;
 	}
+//		printf("-----------------------------\n");
 	return (ants > sum);
 }
 
@@ -475,6 +479,7 @@ void	launch_ants(int ants, t_r_list *paths)
 		path = paths->room;
 		push_ants(path);
 		path->ant = ant_name;
+		print_path(path);
 		paths = paths->next;
 		while (paths && should_use_path(dist, paths->room, ants - ant_name))
 		{
@@ -482,13 +487,34 @@ void	launch_ants(int ants, t_r_list *paths)
 			path = paths->room;
 			push_ants(path);
 			path->ant = ant_name;
+			print_path(path);
 			paths = paths->next;
 		}
-		print_pathes(start);
+		while (paths && push_ants(paths->room))
+		{
+			print_path(paths->room);
+			paths = paths->next;
+		}
+		printf("\n");
 		ant_name++;
 	}
-	// while (push_ants(path))
-	// 	print_path(path);
+	int 	pushed = 1;
+	while (pushed)
+	{
+		paths = start;
+		pushed = 0;
+		while (paths)
+		{
+			if (push_ants(paths->room))
+			{
+				pushed = 1;
+				print_path(paths->room);
+			}
+			paths = paths->next;
+		}
+		if (pushed)
+			printf("\n");
+	}
 }
 
 int		main(void)
@@ -512,16 +538,17 @@ int		main(void)
 	if (paths == NULL)
 		error_exit("No path.");
 	launch_ants(ants, paths);
-	// while (rooms)
+	// while (paths)
 	// {
-	// 	printf("ROOM: %s LINKS: ", rooms->room->name);
-	// 	while (rooms->room->adjacent)
+	// 	t_room *path = paths->room;
+	// 	printf("Length: %i | ", path->distance);
+	// 	while (path)
 	// 	{
-	// 		printf("|%s|", rooms->room->adjacent->room->name);
-	// 		rooms->room->adjacent = rooms->room->adjacent->next;
+	// 		printf("%s -> ", path->name);
+	// 		path = path->ancestor;
 	// 	}
+	// 	paths = paths->next;
 	// 	printf("\n");
-	// 	rooms = rooms->next;
 	// }
 //	ft_lstdel(&list_start, del_list);
 //	system("leaks lem-in");
