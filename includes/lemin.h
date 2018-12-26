@@ -46,6 +46,7 @@ typedef	struct		s_room
 	int				ant;
 	t_r_list		*adjacent;
 	int				visit_id;
+	int				id;
 }					t_room;
 
 #endif

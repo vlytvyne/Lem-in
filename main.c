@@ -98,6 +98,7 @@ t_room		*init_room(char	**lines, e_sp_mean sp_mean)
 	room->adjacent = NULL;
 	room->ant = 0;
 	room->visit_id = 0;
+	room->id = 0;
 	room->ancestor = NULL;
 	i = 0;
 	if (lines[1][0] == '-')
@@ -316,6 +317,7 @@ t_room	*deq(t_r_list **front)
 
 int		mark_path(t_room *room)
 {
+	room->id = room->visit_id;
 	room->visit_id = USED;
 	if (room->sp_mean == END)
 		return (0);
@@ -424,23 +426,72 @@ void	print_path(t_room *room)
 	printf("\n");
 }
 
+void	fill_dist(int *dist, t_r_list *paths)
+{
+	while (paths)
+	{
+		dist[paths->room->id] = paths->room->distance;
+		paths = paths->next;
+	}
+}
+
+int		should_use_path(int *dist, t_room *path, int ants)
+{
+	int		i;
+	int		sum;
+
+	i = 1;
+	sum = 0;
+	while (i < path->id)
+	{
+		sum += path->distance - dist[i];
+	//printf("SUM: %i PATH: %i DI: %i\n", sum, path->distance, dist[i]);
+		i++;
+	}
+	return (ants > sum);
+}
+
+void	print_dist(int *dist, t_r_list *paths)
+{
+	while (paths)
+	{
+		printf("DIST: %i\n", dist[paths->room->id]);
+		paths = paths->next;
+	}
+}
+
 void	launch_ants(int ants, t_r_list *paths)
 {
-	int 	ant_name;
-	t_room	*path;
+	int 		ant_name;
+	t_room		*path;
+	int			dist[1000];
+	t_r_list	*start;
 
+	start = paths;
 	ant_name = 1;
-	path = paths->room;
+	fill_dist(dist, paths);
+	//print_dist(dist, paths);
 	while (ant_name <= ants)
 	{
-		
+		paths = start;
+		path = paths->room;
 		push_ants(path);
 		path->ant = ant_name;
+		print_path(path);
+		paths = paths->next;
+		while (paths && should_use_path(dist, paths->room, ants - ant_name))
+		{
+			ant_name++;
+			path = paths->room;
+			push_ants(path);
+			path->ant = ant_name;
+			print_path(path);
+			paths = paths->next;
+		}
 		ant_name++;
-		print_path(path);
 	}
-	while (push_ants(path))
-		print_path(path);
+	// while (push_ants(path))
+	// 	print_path(path);
 }
 
 int		main(void)
@@ -461,6 +512,8 @@ int		main(void)
 	link_rooms(&list, rooms);
 	end = get_graph_end(rooms);
 	paths = get_paths(end);
+	if (paths == NULL)
+		error_exit("No path.");
 	launch_ants(ants, paths);
 	// while (rooms)
 	// {
