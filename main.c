@@ -13,6 +13,15 @@
 #include "lemin.h"
 # include <stdio.h>
 
+void	free_after_split(char **lines)
+{
+	int i;
+
+	i = 0;
+	while (lines[i])
+		free(lines[i++]);
+	free(lines);
+}
 
 t_list	*read_input(void)
 {
@@ -83,7 +92,6 @@ t_r_list	*create_r_list(t_room *room)
 	return (list);
 }
 
-//проверять начинаеться ли комната с 'L'
 t_room		*init_room(char	**lines, e_sp_mean sp_mean)
 {
 	t_room	*room;
@@ -114,6 +122,9 @@ t_room		*init_room(char	**lines, e_sp_mean sp_mean)
 			error_exit("Please, enter rooms in the acceptable format.");
 	room->coor.x = ft_atoi(lines[1]);
 	room->coor.y = ft_atoi(lines[2]);
+	free(lines[1]);
+	free(lines[2]);
+	free(lines);
 	return (room);
 }
 
@@ -173,7 +184,10 @@ t_r_list	*create_rooms(t_list **list)
 		{
 			lines = ft_strsplit(LIST_LINE, ' ');
 			if (count_words(lines) != 3)
+			{
+				free_after_split(lines);
 				return (rooms);
+			}
 			if (rooms == NULL)
 				rooms = create_r_list(init_room(lines, sp_m));
 			else
@@ -260,8 +274,12 @@ void	link_rooms(t_list **list, t_r_list *rooms)
 		{
 			links = ft_strsplit(LIST_LINE, '-');
 			if (count_words(links) != 2)
+			{
+				free_after_split(links);
 				return ;
+			}
 			set_link(links, rooms);
+			free_after_split(links);
 			*list = (*list)->next;
 		}
 	}
@@ -289,6 +307,19 @@ t_room	*get_graph_end(t_r_list *rooms)
 	return (end);
 }
 
+int		mark_path(t_room *room)
+{
+	room->id = room->visit_id;
+	room->visit_id = USED;
+	if (room->sp_mean == END)
+		return (1);
+	if (room->ancestor)
+	{
+		room->distance = mark_path(room->ancestor) + 1;
+	}
+	return (room->distance);
+}
+
 void	enq(t_r_list **rear, t_r_list **front, t_room *room)
 {
 	t_r_list	*curr;
@@ -301,6 +332,18 @@ void	enq(t_r_list **rear, t_r_list **front, t_room *room)
 		*front = curr;
 }
 
+void	free_que(t_r_list *front)
+{
+	t_r_list *to_free;
+
+	while (front)
+	{
+		to_free = front;
+		front = front->next;
+		free(to_free);
+	}
+}
+
 t_room	*deq(t_r_list **front)
 {
 	t_r_list	*to_free;
@@ -311,21 +354,8 @@ t_room	*deq(t_r_list **front)
 	to_free = *front;
 	room = (*front)->room;
 	*front = (*front)->next;
-	//free(to_free);
+	free(to_free);
 	return (room);
-}
-
-int		mark_path(t_room *room)
-{
-	room->id = room->visit_id;
-	room->visit_id = USED;
-	if (room->sp_mean == END)
-		return (1);
-	if (room->ancestor)
-	{
-		room->distance = mark_path(room->ancestor) + 1;
-	}
-	return (room->distance);
 }
 
 t_room	*bfs(t_room *end, int visit_id)
@@ -340,11 +370,14 @@ t_room	*bfs(t_room *end, int visit_id)
 	enq(&rear, &front, end);
 	while (front != NULL)
 	{
+		// printf("FRONT: %p\n", front);
+		// printf("REAR: %p\n", rear);
 		room = deq(&front);
 		room->visit_id = visit_id;
 		if (room->sp_mean == START)
 		{
 			mark_path(room->ancestor);
+			//free_que(front);
 			return (room->ancestor);
 		}
 		adjacent = room->adjacent;
@@ -517,6 +550,16 @@ void	launch_ants(int ants, t_r_list *paths)
 	}
 }
 
+void	print_input(t_list *list)
+{
+	while (list)
+	{
+		printf("%s\n", (char*)list->content);
+		list = list->next;
+	}
+	printf("\n");
+}
+
 int		main(void)
 {
 	t_list		*list;
@@ -537,19 +580,7 @@ int		main(void)
 	paths = get_paths(end);
 	if (paths == NULL)
 		error_exit("No path.");
+	print_input(list_start);
 	launch_ants(ants, paths);
-	// while (paths)
-	// {
-	// 	t_room *path = paths->room;
-	// 	printf("Length: %i | ", path->distance);
-	// 	while (path)
-	// 	{
-	// 		printf("%s -> ", path->name);
-	// 		path = path->ancestor;
-	// 	}
-	// 	paths = paths->next;
-	// 	printf("\n");
-	// }
-//	ft_lstdel(&list_start, del_list);
-//	system("leaks lem-in");
+	system("leaks lem-in");
 }
