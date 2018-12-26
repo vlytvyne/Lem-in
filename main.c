@@ -406,24 +406,12 @@ int		push_ants(t_room *room)
 
 void	print_path(t_room *room)
 {
-	int		ft;
-
-	ft = 1;
 	while (room)
 	{
 		if (room->ant != 0)
-		{
-			if (ft)
-			{
-				printf("L%i-%s", room->ant, room->name);
-				ft = 0;
-			}
-			else
-				printf(" L%i-%s", room->ant, room->name);
-		}
+			printf("L%i-%s ", room->ant, room->name);
 		room = room->NEXT;
 	}
-	printf("\n");
 }
 
 void	fill_dist(int *dist, t_r_list *paths)
@@ -460,6 +448,16 @@ void	print_dist(int *dist, t_r_list *paths)
 	}
 }
 
+void	print_pathes(t_r_list *paths)
+{
+	while (paths)
+	{
+		print_path(paths->room);
+		paths = paths->next;
+	}
+	printf("\n");
+}
+
 void	launch_ants(int ants, t_r_list *paths)
 {
 	int 		ant_name;
@@ -477,7 +475,6 @@ void	launch_ants(int ants, t_r_list *paths)
 		path = paths->room;
 		push_ants(path);
 		path->ant = ant_name;
-		print_path(path);
 		paths = paths->next;
 		while (paths && should_use_path(dist, paths->room, ants - ant_name))
 		{
@@ -485,9 +482,9 @@ void	launch_ants(int ants, t_r_list *paths)
 			path = paths->room;
 			push_ants(path);
 			path->ant = ant_name;
-			print_path(path);
 			paths = paths->next;
 		}
+		print_pathes(start);
 		ant_name++;
 	}
 	// while (push_ants(path))
