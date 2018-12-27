@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vlytvyne <vlytvyne@student.unit.ua>        +#+  +:+       +#+         #
+#    By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/17 19:00:47 by vlytvyne          #+#    #+#              #
-#    Updated: 2018/12/17 19:00:47 by vlytvyne         ###   ########.fr        #
+#    Updated: 2018/12/27 14:00:51 by vlytvyne         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ FLAGS =
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIB)
-	gcc $(FLAGS) $(OBJ) $(LIB) -o $(NAME)
+	gcc *.c libft/libft.a -I includes/ -o lem-in
 
 $(LIB):
 	make -C libft all
