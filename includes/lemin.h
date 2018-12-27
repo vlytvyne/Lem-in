@@ -6,7 +6,7 @@
 /*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/17 18:53:58 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/12/27 17:37:24 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/27 19:30:48 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,22 @@
 #define LIST_LINE ((char*)((*list)->content))
 #define USED INT_MAX
 #define NEXT ancestor
+
+typedef struct		s_flags
+{
+	unsigned int	verbose:1;
+	unsigned int	silent:1;
+	unsigned int	names:1;
+	unsigned int	color:1;
+}					t_flags;
+
+#ifdef  MAIN_FILE
+t_flags g_flags;
+int		g_lines;
+#else
+extern t_flags	g_flags;
+extern int		g_lines;
+#endif
 
 typedef enum		e_sp_meaning
 {
@@ -67,5 +83,6 @@ t_room				*get_graph_end(t_r_list *rooms);
 void				launch_ants(int ants, t_r_list *paths, int *dist);
 int					*get_dist(t_r_list *paths);
 void				print_path(t_room *room);
+void				end_of_line(void);
 
 #endif

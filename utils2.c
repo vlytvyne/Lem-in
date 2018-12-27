@@ -6,11 +6,18 @@
 /*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/27 13:33:51 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/12/27 15:39:00 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/27 19:36:07 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
+
+char	g_colors[6][9] = {RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN};
+char	g_names[30][100] = {"Богдана", "Петя", "Василь", "Ніколя", "Іван",
+	"Пан мураха", "Сергій", "Богуслава", "Михайло", "Єгор", "Йосип",
+	"Іванка", "Валера", "Даринка", "Гаврило", "Марися", "Супермураха",
+	"Віталій Семенович", "Зоя", "Казимир", "Леонід", "Забава", "Бандерівець",
+	"Ярик", "Кирило", "Ілля", "Ганна", "Микола", "Юлька", "Павло"};
 
 void	check_commands(t_list **list)
 {
@@ -89,7 +96,14 @@ void	print_path(t_room *room)
 	while (room)
 	{
 		if (room->ant != 0)
-			ft_printf("L%i-%s ", room->ant, room->name);
+		{
+			if (g_flags.color)
+				ft_printf("%t", g_colors[room->ant % 6]);
+			if (g_flags.names)
+				ft_printf("%s-%s ", g_names[room->ant % 30], room->name);
+			else
+				ft_printf("L%i-%s ", room->ant, room->name);
+		}
 		if (room->sp_mean == END)
 			room->ant = 0;
 		room = room->NEXT;

@@ -6,7 +6,7 @@
 /*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/27 13:35:26 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/12/27 15:32:10 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/27 19:31:22 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	all_ants_on_map(t_r_list *start)
 			paths = paths->next;
 		}
 		if (pushed)
-			ft_printf("\n");
+			end_of_line();
 	}
 }
 
@@ -105,7 +105,7 @@ void		launch_ants(int ants, t_r_list *paths, int *dist)
 			print_path(paths->room);
 			paths = paths->next;
 		}
-		ft_printf("\n");
+		end_of_line();
 	}
 	free(dist);
 	all_ants_on_map(start);

@@ -6,7 +6,7 @@
 /*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/27 13:05:53 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/12/27 14:07:04 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/27 19:31:27 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,10 @@ void	free_que(t_r_list *front)
 		front = front->next;
 		free(to_free);
 	}
+}
+
+void	end_of_line(void)
+{
+	ft_putchar('\n');
+	g_lines++;
 }
