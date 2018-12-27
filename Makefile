@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+         #
+#    By: vlytvyne <vlytvyne@student.unit.ua>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/12/17 19:00:47 by vlytvyne          #+#    #+#              #
-#    Updated: 2018/12/27 14:00:51 by vlytvyne         ###   ########.fr        #
+#    Created: 2018/12/27 15:37:48 by vlytvyne          #+#    #+#              #
+#    Updated: 2018/12/27 15:37:48 by vlytvyne         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = lem-in
 
 INCDIR = includes/
 
-SRC = main.c 
+SRC = create_rooms.c get_paths.c input.c launch_ants.c linker.c main.c queue.c utils.c utils2.c 
 
 OBJDIR = objects
 
@@ -24,14 +24,14 @@ LIB = libft/libft.a
 
 INCDIR = includes
 
-FLAGS = 
+FLAGS = -Wall -Werror -Wextra
 
 .PHONY: all clean fclean re cleanlib fcleanlib relib
 
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIB)
-	gcc *.c libft/libft.a -I includes/ -o lem-in
+	gcc $(FLAGS) $(OBJ) $(LIB) -o $(NAME)
 
 $(LIB):
 	make -C libft all

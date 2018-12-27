@@ -6,7 +6,7 @@
 /*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/27 13:33:51 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/12/27 14:13:43 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/27 15:39:00 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int		extract_ants(t_list **list)
 	int		i;
 
 	i = 0;
+	ants = 0;
 	while (*list && LIST_LINE[0] == '#')
 	{
 		check_commands(list);
@@ -68,4 +69,29 @@ t_room	*get_graph_end(t_r_list *rooms)
 	if (end == NULL)
 		error_exit("No end.");
 	return (end);
+}
+
+int		*get_dist(t_r_list *paths)
+{
+	int		*dist;
+
+	dist = (int*)malloc(sizeof(int) * 1000);
+	while (paths)
+	{
+		dist[paths->room->id] = paths->room->distance;
+		paths = paths->next;
+	}
+	return (dist);
+}
+
+void	print_path(t_room *room)
+{
+	while (room)
+	{
+		if (room->ant != 0)
+			ft_printf("L%i-%s ", room->ant, room->name);
+		if (room->sp_mean == END)
+			room->ant = 0;
+		room = room->NEXT;
+	}
 }

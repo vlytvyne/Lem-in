@@ -6,7 +6,7 @@
 /*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/17 18:52:31 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/12/27 14:01:44 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/27 15:19:41 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,6 @@ int		main(void)
 	if (paths == NULL)
 		error_exit("No path.");
 	print_input(list_start);
-	launch_ants(ants, paths);
+	launch_ants(ants, paths, get_dist(paths));
 	system("leaks lem-in");
 }

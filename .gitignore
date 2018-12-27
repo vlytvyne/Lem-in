@@ -1,5 +1,6 @@
 Makebuilder.sh
-generator
 objects
 lem-in
 libft.a
+maps
+result

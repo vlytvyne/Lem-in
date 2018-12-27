@@ -6,7 +6,7 @@
 /*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/17 18:53:58 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/12/27 13:35:39 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/27 15:37:08 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,23 @@ typedef	struct		s_room
 	int				id;
 }					t_room;
 
-void	enq(t_r_list **rear, t_r_list **front, t_room *room);
-t_room	*deq(t_r_list **front);
-void	free_que(t_r_list *front);
-t_list	*read_input(void);
-void	print_input(t_list *list);
-int		count_words(char **lines);
-void	free_after_split(char **lines);
-t_r_list	*create_r_list(t_room *room);
-void	add_room_nocheck(t_r_list *head, t_r_list *new);
-void	add_room(t_r_list *head, t_r_list *new);
-t_r_list	*get_paths(t_room *end);
-t_r_list	*create_rooms(t_list **list);
-void	link_rooms(t_list **list, t_r_list *rooms);
-int		extract_ants(t_list **list);
-t_room	*get_graph_end(t_r_list *rooms);
-void	launch_ants(int ants, t_r_list *paths);
+void				enq(t_r_list **rear, t_r_list **front, t_room *room);
+t_room				*deq(t_r_list **front);
+void				free_que(t_r_list *front);
+t_list				*read_input(void);
+void				print_input(t_list *list);
+int					count_words(char **lines);
+void				free_after_split(char **lines);
+t_r_list			*create_r_list(t_room *room);
+void				add_room_nocheck(t_r_list *head, t_r_list *new);
+void				add_room(t_r_list *head, t_r_list *new);
+t_r_list			*get_paths(t_room *end);
+t_r_list			*create_rooms(t_list **list);
+void				link_rooms(t_list **list, t_r_list *rooms);
+int					extract_ants(t_list **list);
+t_room				*get_graph_end(t_r_list *rooms);
+void				launch_ants(int ants, t_r_list *paths, int *dist);
+int					*get_dist(t_r_list *paths);
+void				print_path(t_room *room);
 
 #endif
