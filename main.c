@@ -6,7 +6,7 @@
 /*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/17 18:52:31 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/12/27 19:39:49 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/27 19:51:48 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ void	show_usage(void)
 {
 	ft_printf("usage: ./lem-in [-vsnch] < map\n");
 	ft_printf("       -h    help     - show usage.\n");
-	ft_printf("       -v    verbose  - show found path and number of lines ");
-	ft_printf("at the end of output.\n");
+	ft_printf("       -v    verbose  - show found paths and number of ");
+	ft_printf("lines at the end of output.\n");
 	ft_printf("       -s    silent   - don't show map.\n");
 	ft_printf("       -v    color    - assign to each ant a color.\n");
-	ft_printf("       -n    name     - add ants some individuality.\n");
+	ft_printf("       -n    name     - give each ant a name.\n");
 	exit(0);
 }
 
