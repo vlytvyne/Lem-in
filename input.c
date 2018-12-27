@@ -6,7 +6,7 @@
 /*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/27 13:12:52 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/12/27 14:06:08 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/27 17:36:57 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ t_list	*read_input(void)
 	return (head);
 }
 
-void	print_input(t_list *list)
+void	print_input(t_list *start, t_list *list)
 {
-	while (list)
+	while (start && start != list)
 	{
-		ft_printf("%s\n", (char*)list->content);
-		list = list->next;
+		ft_printf("%s\n", (char*)start->content);
+		start = start->next;
 	}
 	ft_printf("\n");
 }

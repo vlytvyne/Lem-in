@@ -6,7 +6,7 @@
 /*   By: vlytvyne <vlytvyne@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/17 18:53:58 by vlytvyne          #+#    #+#             */
-/*   Updated: 2018/12/27 15:37:08 by vlytvyne         ###   ########.fr       */
+/*   Updated: 2018/12/27 17:37:24 by vlytvyne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void				enq(t_r_list **rear, t_r_list **front, t_room *room);
 t_room				*deq(t_r_list **front);
 void				free_que(t_r_list *front);
 t_list				*read_input(void);
-void				print_input(t_list *list);
+void				print_input(t_list *start, t_list *list);
 int					count_words(char **lines);
 void				free_after_split(char **lines);
 t_r_list			*create_r_list(t_room *room);
